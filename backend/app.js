@@ -1,34 +1,42 @@
-import express from 'express'
-import dotenv from 'dotenv'
-import cors from 'cors'
-import pool from './config/db.js'
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
 
-dotenv.config()
+import authRoutes from './routes/authRouter.js';
+
+dotenv.config();
+
+// MongoDB'ye bağlan
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+const corsOpts = {
+  origin: "*",
 
-// CORS configuration
-const corsOptions = {
-    origin: '*',
-    methods: ['GET', 'POST'],
-    allowedHeaders: ["Content-Type"],
-}
+  methods: ["GET", "POST"],
 
-app.use(cors(corsOptions));
+  allowedHeaders: ["Content-Type"],
+};
 
+app.use(cors(corsOpts));
 
-app.get('/', (req, res) => {
-    res.json({
-        message: 'Bug Horizon projesine hoş geldiniz.',
-    })
-})
+app.use('/api/auth', authRoutes);
 
 
+app.get("/", (req, res) => {
+  res.json({
+    message: `
+     Bug horizion projesine hoş geldiniz.
+    `,
+  });
+});
+
+// Start server
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-})
+  console.log(`Server is running on port ${PORT}`);
+});

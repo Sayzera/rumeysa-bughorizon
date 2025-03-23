@@ -209,21 +209,12 @@ const SideBar = () => {
             icon={<MdOutlineSecurity className="size-6" />}
           />
 
-
-
-
-
           <Item
             title="CSP"
             path="/invoices"
             colors={colors}
             icon={<LuShieldAlert className="size-6" />}
           />
- 
-
-
-
-
 
 
         </Menu>

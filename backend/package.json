@@ -1,19 +1,31 @@
 {
-  "name": "bug-horizon-project",
+  "name": "bug-horizon-backend",
   "version": "1.0.0",
+  "description": "",
   "type": "module",
   "scripts": {
-    "dev": "nodemon app.js"
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "lint": "eslint . --ext .js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "nod",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/pg": "^8.11.11",
+    "eslint": "8.34.0",
+    "nodemon": "2.0.4"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
-    "pg": "^8.14.1"
-  },
-  "devDependencies": {
+    "mongoose": "^8.12.1",
+    "multer": "1.4.5-lts.1",
     "node-pg-migrate": "^7.9.1",
-    "nodemon": "^3.1.9"
+    "pg": "^8.14.1"
   }
 }
