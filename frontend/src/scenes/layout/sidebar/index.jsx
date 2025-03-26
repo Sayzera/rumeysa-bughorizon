@@ -30,6 +30,7 @@ import { SiHackaday } from "react-icons/si";
 import { LuFileWarning } from "react-icons/lu";
 import { MdOutlineSecurity } from "react-icons/md";
 import { LuShieldAlert } from "react-icons/lu";
+import { GiSkullCrack } from "react-icons/gi";
 
 const SideBar = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -161,6 +162,12 @@ const SideBar = () => {
             },
           }}
         >
+         <Item
+            title="Zip Slip"
+            path="/zip-slip"
+            colors={colors}
+            icon={<GiSkullCrack  className="size-6" />}
+          />
           <Item
             title="Broken Authentication"
             path="/team"

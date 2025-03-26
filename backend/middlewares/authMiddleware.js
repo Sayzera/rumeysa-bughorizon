@@ -1,7 +1,7 @@
 import { verifyToken } from "../utils/jwtUtils.js";
 
 const authMiddleware = (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1]; // Bearer token
+  const token = req?.headers?.authorization?.split(" ")[1]; // Bearer token
 
   if (!token) {
     res.status(403).json({
@@ -9,11 +9,15 @@ const authMiddleware = (req, res, next) => {
     });
   }
 
-  if (!verifyToken(token)) {
+  const tokenData = verifyToken(token);
+
+  if (!tokenData) {
     res.status(401).json({
       message: "Token geçersiz",
     });
   }
+
+  req.user = tokenData;
 
   next();
 };

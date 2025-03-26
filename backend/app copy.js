@@ -4,7 +4,6 @@ import cors from "cors";
 import fileUpload from "express-fileupload";
 import authRoutes from './routes/authRouter.js';
 import zipSlipRoutes from './routes/zipSlipRouter.js';
-import owaspRoutes from './routes/owaspRouter.js';
 dotenv.config();
 
 // MongoDB'ye bağlan
@@ -28,8 +27,6 @@ app.use(cors(corsOpts));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/zip-slip', zipSlipRoutes);
-app.use('/api/owasp', owaspRoutes);
-
 
 app.get("/", (req, res) => {
   res.json({

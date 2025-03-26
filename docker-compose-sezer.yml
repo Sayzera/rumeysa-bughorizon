@@ -3,7 +3,7 @@ services:
     container_name: postgres_sezer
     image: postgres
     environment:
-      POSTGRES_USER: bughorizon
+      POSTGRES_USER: bughorizon_sezer
       POSTGRES_PASSWORD: bughorizon123
       PGDATA: /data/postgres
       POSTGRES_DB: bughorizon
