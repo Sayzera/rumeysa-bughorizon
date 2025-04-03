@@ -15,6 +15,8 @@ import {
   Calendar,
   Stream,
 } from "./scenes";
+import Register from "./scenes/auth/register";
+import Login from "./scenes/auth/login";
 
 const AppRouter = () => {
   return (
@@ -22,6 +24,9 @@ const AppRouter = () => {
       <Routes>
         <Route path="/" element={<App />}>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+          
           <Route path="/team" element={<Team />} />
           <Route path="/contacts" element={<Contacts />} />
           <Route path="/invoices" element={<Invoices />} />
