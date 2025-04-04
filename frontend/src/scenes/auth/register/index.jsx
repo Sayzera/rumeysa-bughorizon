@@ -12,6 +12,10 @@ function Register() {
 
     const handleFormSubmit = () => {
         // TODO: kullanıcı adı ve şifre boş geçilmemeli
+        if(username==='' || password==='' || email===''){
+          alert("Kullanıcı adı, şifre veya email  alanları boş geçilemez.")
+          return;
+        }
 
         axios.post(
             import.meta.env.VITE_BASE_URL + endpoints.register, {

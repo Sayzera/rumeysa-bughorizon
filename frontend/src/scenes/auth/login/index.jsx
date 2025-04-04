@@ -2,14 +2,19 @@ import { Button, TextField } from "@mui/material";
 import React, { useState } from "react";
 import axios from 'axios'
 import { endpoints } from "../../../constant/endpoints";
-function Login() {
+import { useNavigate } from "react-router-dom";
 
+function Login() {
+    const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
     const handleFormSubmit = () => {
         // TODO: kullanıcı adı, email ve şifre boş geçilmemeli
-
+        if(username==='' || password===''){
+          alert("Kullanıcı adı ve şifre alanları boş geçilemez.")
+          return;
+        }
         axios.post(
             import.meta.env.VITE_BASE_URL + endpoints.login, {
                 username: username,
@@ -17,7 +22,8 @@ function Login() {
             }
         ).then((response) => {
           // TODO: işlemimiz bu noktada başarılı kullanıcıyı dashboarda gönderin.
-       
+          navigate("/")
+          
         })
         .catch((error) => {
           const err = error.response.data;
