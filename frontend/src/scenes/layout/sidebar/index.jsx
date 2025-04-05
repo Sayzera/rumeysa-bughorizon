@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { Avatar, Box, IconButton, Typography, useTheme } from "@mui/material";
+import { Avatar, Box, IconButton, Typography, useTheme, Switch } from "@mui/material";
 import { useContext, useState } from "react";
 import { tokens } from "../../../theme";
 import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
@@ -31,12 +31,15 @@ import { LuFileWarning } from "react-icons/lu";
 import { MdOutlineSecurity } from "react-icons/md";
 import { LuShieldAlert } from "react-icons/lu";
 import { GiSkullCrack } from "react-icons/gi";
+import { useVulnerability } from '../../../context/VulnerabilityContext';
 
 const SideBar = () => {
   const [collapsed, setCollapsed] = useState(false);
   const { toggled, setToggled } = useContext(ToggledContext);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const { vulnerabilities, toggleVulnerability } = useVulnerability();
+
   return (
     <Sidebar
       backgroundColor={colors.primary[400]}
@@ -162,65 +165,115 @@ const SideBar = () => {
             },
           }}
         >
-         <Item
-            title="Zip Slip"
-            path="/zip-slip"
-            colors={colors}
-            icon={<GiSkullCrack  className="size-6" />}
-          />
           <Item
             title="Broken Authentication"
-            path="/team"
+            path="/broken-auth"
             colors={colors}
-            icon={<MdLocalPolice  className="size-6" />}
+            icon={<MdLocalPolice className="size-6" />}
+            action={
+              <Switch
+                checked={vulnerabilities.brokenAuth}
+                onChange={() => toggleVulnerability('brokenAuth')}
+                color="primary"
+              />
+            }
           />
           <Item
             title="SQL Injection (SQLi)"
-            path="/contacts"
+            path="/sql-injection"
             colors={colors}
             icon={<AiOutlineConsoleSql className="size-6" />}
+            action={
+              <Switch
+                checked={vulnerabilities.sqlInjection}
+                onChange={() => toggleVulnerability('sqlInjection')}
+                color="primary"
+              />
+            }
           />
           <Item
             title="XSS"
-            path="/invoices"
+            path="/xss"
             colors={colors}
             icon={<CiCircleAlert className="size-6" />}
+            action={
+              <Switch
+                checked={vulnerabilities.xss}
+                onChange={() => toggleVulnerability('xss')}
+                color="primary"
+              />
+            }
           />
           <Item
             title="Security Misconfiguration"
-            path="/invoices"
+            path="/security-misconfig"
             colors={colors}
             icon={<TbSettingsX className="size-6" />}
+            action={
+              <Switch
+                checked={vulnerabilities.securityMisconfig}
+                onChange={() => toggleVulnerability('securityMisconfig')}
+                color="primary"
+              />
+            }
           />
 
           <Item
             title="CSRF"
-            path="/invoices"
+            path="/csrf"
             colors={colors}
             icon={<SiHackaday className="size-6" />}
+            action={
+              <Switch
+                checked={vulnerabilities.csrf}
+                onChange={() => toggleVulnerability('csrf')}
+                color="primary"
+              />
+            }
           />
 
 
           <Item
             title="Logging Deficiencies"
-            path="/invoices"
+            path="/logging"
             colors={colors}
             icon={<LuFileWarning className="size-6" />}
+            action={
+              <Switch
+                checked={vulnerabilities.loggingDeficiencies}
+                onChange={() => toggleVulnerability('loggingDeficiencies')}
+                color="primary"
+              />
+            }
           />
 
 
           <Item
             title="SSRF"
-            path="/invoices"
+            path="/ssrf"
             colors={colors}
             icon={<MdOutlineSecurity className="size-6" />}
+            action={
+              <Switch
+                checked={vulnerabilities.ssrf}
+                onChange={() => toggleVulnerability('ssrf')}
+                color="primary"
+              />
+            }
           />
 
           <Item
             title="CSP"
-            path="/invoices"
+            path="/csp"
             colors={colors}
             icon={<LuShieldAlert className="size-6" />}
+            action={
+              <Switch
+                checked={vulnerabilities.csp}
+                onChange={() => toggleVulnerability('csp')}
+                color="primary"
+              />
+            }
           />
 
 

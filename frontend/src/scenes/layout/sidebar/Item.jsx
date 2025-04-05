@@ -1,20 +1,36 @@
 /* eslint-disable react/prop-types */
-import { MenuItem } from "react-pro-sidebar";
-import { Link, useLocation } from "react-router-dom";
+import { Box, Typography } from "@mui/material";
+import { Link } from "react-router-dom";
 
-const Item = ({ title, path, icon }) => {
-  const location = useLocation();
+const Item = ({ title, path, icon, colors, action }) => {
   return (
-    <MenuItem
-      component={<Link to={path} />}
-      to={path}
-      icon={icon}
-      rootStyles={{
-        color: path === location.pathname && "#6870fa",
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: "10px 20px",
+        "&:hover": {
+          backgroundColor: colors.primary[500],
+        },
       }}
     >
-      {title}
-    </MenuItem>
+      <Link
+        to={path}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          textDecoration: "none",
+          color: colors.gray[100],
+          flex: 1,
+        }}
+      >
+        {icon}
+        <Typography variant="body1">{title}</Typography>
+      </Link>
+      {action}
+    </Box>
   );
 };
 
