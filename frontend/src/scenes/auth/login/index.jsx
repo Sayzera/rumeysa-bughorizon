@@ -10,7 +10,6 @@ function Login() {
     const [password, setPassword] = useState("");
 
     const handleFormSubmit = () => {
-        // TODO: kullanıcı adı, email ve şifre boş geçilmemeli
         if(username==='' || password===''){
           alert("Kullanıcı adı ve şifre alanları boş geçilemez.")
           return;
@@ -21,7 +20,6 @@ function Login() {
                 password: password,
             }
         ).then((response) => {
-          // TODO: işlemimiz bu noktada başarılı kullanıcıyı dashboarda gönderin.
           navigate("/")
           
         })

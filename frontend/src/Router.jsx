@@ -17,6 +17,7 @@ import {
 } from "./scenes";
 import Register from "./scenes/auth/register";
 import Login from "./scenes/auth/login";
+import BrokenAuthScreen from "./scenes/broken-auth";
 
 const AppRouter = () => {
   return (
@@ -27,6 +28,9 @@ const AppRouter = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           
+
+          <Route path="/broken-auth" element={<BrokenAuthScreen />} />
+
           <Route path="/team" element={<Team />} />
           <Route path="/contacts" element={<Contacts />} />
           <Route path="/invoices" element={<Invoices />} />

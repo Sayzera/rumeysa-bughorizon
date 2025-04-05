@@ -4,7 +4,6 @@ import pool from "../config/db.js"
 export const registerUser = async (username, password, email) => {
     try {
      
-        //TODO: Bir kullanıcı daha önceden kayıt olmuş ise bu kaydı kontrol et ve hata olarak geri döndür
         const tableName = 'tbl_users'
         const user=await pool.query(
             `SELECT * FROM ${tableName} WHERE username=$1 AND password=$2`,
@@ -30,8 +29,6 @@ export const registerUser = async (username, password, email) => {
 
 export const loginUser = async (username, password) => {
     try {
-
-        // TODO: Eğer username db de yoksa hata olarak döndür 
         
         const tableName = 'tbl_users'
 

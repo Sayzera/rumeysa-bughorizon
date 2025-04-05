@@ -11,7 +11,6 @@ function Register() {
     const navigate = useNavigate();
 
     const handleFormSubmit = () => {
-        // TODO: kullanıcı adı ve şifre boş geçilmemeli
         if(username==='' || password==='' || email===''){
           alert("Kullanıcı adı, şifre veya email  alanları boş geçilemez.")
           return;

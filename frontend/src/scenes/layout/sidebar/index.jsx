@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { Avatar, Box, IconButton, Typography, useTheme } from "@mui/material";
+import { Avatar, Box, IconButton, Switch, Typography, useTheme } from "@mui/material";
 import { useContext, useState } from "react";
 import { tokens } from "../../../theme";
 import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
@@ -30,18 +30,41 @@ import { SiHackaday } from "react-icons/si";
 import { LuFileWarning } from "react-icons/lu";
 import { MdOutlineSecurity } from "react-icons/md";
 import { LuShieldAlert } from "react-icons/lu";
+import { useContextZafiyetler } from "../../../context/ZafiyetlerContext";
 
 const SideBar = () => {
   const [collapsed, setCollapsed] = useState(false);
   const { toggled, setToggled } = useContext(ToggledContext);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const {
+    zafiyetler, toggleZafiyet
+  } = useContextZafiyetler();
+
+  /**
+   * TODO: diğer kısımlardaki linklerin switch proplarını ekle, ve context api ile bağla
+    *  <Switch
+        checked={zafiyetler.brokenAuth}
+        onChange={() => {
+        toggleZafiyet("brokenAuth");
+        }}
+      />
+
+      Test etmek için console.log(zafiyetler)
+
+
+      TODO: Her bir link için bir sayfa oluşturalım, klasor adları link ile ilgili olacak ana sayfa ise index.jsx adında olmalıdır. aldığın ekran görüntüsündeki gibi sayfanın içini adına göre düzenleyelim 
+   */
+ 
+
   return (
     <Sidebar
       backgroundColor={colors.primary[400]}
       rootStyles={{
         border: 0,
         height: "100%",
+        width: "300px"
+     
       }}
       collapsed={collapsed}
       onBackdropClick={() => setToggled(false)}
@@ -163,27 +186,46 @@ const SideBar = () => {
         >
           <Item
             title="Broken Authentication"
-            path="/team"
+            path="/broken-auth"
             colors={colors}
             icon={<MdLocalPolice  className="size-6" />}
+            action={
+              <Switch
+               checked={zafiyetler.brokenAuth}
+               onChange={() => {
+                toggleZafiyet("brokenAuth");
+               }}
+              />
+            }
           />
+
+
           <Item
             title="SQL Injection (SQLi)"
             path="/contacts"
             colors={colors}
             icon={<AiOutlineConsoleSql className="size-6" />}
+            action={
+              <Switch />
+            }
           />
           <Item
             title="XSS"
             path="/invoices"
             colors={colors}
             icon={<CiCircleAlert className="size-6" />}
+            action={
+              <Switch />
+            }
           />
           <Item
             title="Security Misconfiguration"
             path="/invoices"
             colors={colors}
             icon={<TbSettingsX className="size-6" />}
+            action={
+              <Switch />
+            }
           />
 
           <Item

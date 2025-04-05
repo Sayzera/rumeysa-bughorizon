@@ -24,7 +24,9 @@ function App() {
               <Outlet />
             ) : (
               <Box sx={{ display: "flex", height: "100vh", maxWidth: "100%" }}>
-              <SideBar />
+          <div className="!w-[500px]">
+          <SideBar />
+          </div>
               <Box
                 sx={{
                   flexGrow: 1,

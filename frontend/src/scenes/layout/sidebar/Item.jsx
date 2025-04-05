@@ -2,18 +2,24 @@
 import { MenuItem } from "react-pro-sidebar";
 import { Link, useLocation } from "react-router-dom";
 
-const Item = ({ title, path, icon }) => {
+const Item = ({ title, path, icon, action }) => {
   const location = useLocation();
   return (
     <MenuItem
-      component={<Link to={path} />}
+      className="!w-[300px] "
       to={path}
       icon={icon}
       rootStyles={{
         color: path === location.pathname && "#6870fa",
       }}
     >
-      {title}
+      <div className="flex space-x-2 items-center justify-between">
+        <Link to={path}>
+          <span>{title}</span>
+        </Link>
+
+        <div>{action && action}</div>
+      </div>
     </MenuItem>
   );
 };
