@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Box, TextField, Button, Typography, Paper, Alert, Grid, List, ListItem, ListItemText, ListItemIcon, Divider } from "@mui/material";
 import { useVulnerability } from "../../context/VulnerabilityContext";
 import { Security, Lock, Warning, CheckCircle } from '@mui/icons-material';
+import { useTestCount } from "../../context/TestCountContext";
 
 const BrokenAuthPage = () => {
   const [username, setUsername] = useState("");
@@ -12,6 +13,8 @@ const BrokenAuthPage = () => {
   const [loginAttempts, setLoginAttempts] = useState(0);
   const [lastAttemptTime, setLastAttemptTime] = useState(null);
   const [isLocked, setIsLocked] = useState(false);
+  const { incrementTestCount } = useTestCount();
+  const [result, setResult] = useState(null);
 
   // Örnek kullanıcı veritabanı
   const mockUsers = [
@@ -22,7 +25,24 @@ const BrokenAuthPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     
-    // Hesap kilitleme kontrolü
+
+
+    incrementTestCount('brokenAuth');
+    if (!vulnerabilities.brokenAuth) {
+      // Güvenlik açığı aktifken
+      if (username === "admin" && password === "admin123") {
+        setResult({
+          success: true,
+          message: "Giriş başarılı! (Güvenlik açığı aktif)"
+        });
+      } else {
+        setResult({
+          success: false,
+          message: "Kullanıcı adı veya şifre hatalı!"
+        });
+      }
+    } else {
+          // Hesap kilitleme kontrolü
     if (isLocked) {
       setMessage("Hesabınız geçici olarak kilitlendi. Lütfen daha sonra tekrar deneyin.");
       return;
@@ -50,14 +70,7 @@ const BrokenAuthPage = () => {
       return;
     }
 
-    if (vulnerabilities.brokenAuth) {
-      // Güvenlik açığı aktifken
-      if (username === "admin" && password === "admin123") {
-        setMessage("Giriş başarılı! (Güvenlik açığı aktif)");
-      } else {
-        setMessage("Kullanıcı adı veya şifre hatalı!");
-      }
-    } else {
+
       // Güvenlik önlemleri aktifken
       // Şifre karmaşıklığı kontrolü
       const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;

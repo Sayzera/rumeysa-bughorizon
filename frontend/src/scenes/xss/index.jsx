@@ -2,29 +2,27 @@ import React, { useState } from "react";
 import { Box, TextField, Button, Typography, Paper, Alert, Grid, List, ListItem, ListItemText, ListItemIcon, Divider } from "@mui/material";
 import { useVulnerability } from "../../context/VulnerabilityContext";
 import { Security, Code, Warning, CheckCircle } from '@mui/icons-material';
+import { useTestCount } from "../../context/TestCountContext";
 
 const XSSPage = () => {
+  const { vulnerabilities } = useVulnerability();
+  const { incrementTestCount } = useTestCount();
   const [input, setInput] = useState("");
-  const [output, setOutput] = useState("");
-  const { vulnerabilities, toggleVulnerability } = useVulnerability();
+  const [result, setResult] = useState(null);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleTest = () => {
+    incrementTestCount('xss');
     if (vulnerabilities.xss) {
-      // Güvenlik açığı aktifken - HTML/JavaScript enjeksiyonuna açık
-      setOutput(input);
+      // XSS açığı aktif ise, input'u doğrudan render et
+      setResult(input);
     } else {
-      // Güvenlik önlemleri aktifken - HTML/JavaScript enjeksiyonu engellenir
-      setOutput(input.replace(/[&<>"']/g, (match) => {
-        const escape = {
-          '&': '&amp;',
-          '<': '&lt;',
-          '>': '&gt;',
-          '"': '&quot;',
-          "'": '&#39;'
-        };
-        return escape[match];
-      }));
+      // XSS açığı kapalı ise, input'u sanitize et
+      const sanitized = input
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+      setResult(sanitized);
     }
   };
 
@@ -33,35 +31,44 @@ const XSSPage = () => {
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
           <Paper elevation={3} sx={{ p: 3 }}>
-            <Typography variant="h4" gutterBottom>
-              XSS (Cross-Site Scripting) Test
+            <Typography variant="h5" gutterBottom>
+              XSS Test Alanı
             </Typography>
-            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
-              <TextField
-                fullWidth
-                label="Metin Girin"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                margin="normal"
-                multiline
-                rows={4}
-              />
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                fullWidth
-                sx={{ mt: 2 }}
-              >
-                Gönder
-              </Button>
-            </Box>
-            {output && (
-              <Box sx={{ mt: 2 }}>
-                <Typography variant="h6">Çıktı:</Typography>
-                <Paper sx={{ p: 2, mt: 1, minHeight: '100px' }}>
-                  <div dangerouslySetInnerHTML={{ __html: output }} />
-                </Paper>
+            <TextField
+              fullWidth
+              multiline
+              rows={4}
+              variant="outlined"
+              label="Test için metin girin"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              sx={{ mb: 2 }}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleTest}
+              fullWidth
+            >
+              Test Et
+            </Button>
+            {result !== null && (
+              <Box mt={2}>
+                <Alert severity={vulnerabilities.xss ? "error" : "success"}>
+                  {vulnerabilities.xss
+                    ? "XSS açığı aktif! Kötü niyetli kod çalıştırılabilir."
+                    : "XSS açığı kapalı. Input güvenli bir şekilde işlendi."}
+                </Alert>
+                <Box
+                  mt={2}
+                  p={2}
+                  border={1}
+                  borderColor="grey.300"
+                  borderRadius={1}
+                >
+                  <Typography variant="body1">Sonuç:</Typography>
+                  <div dangerouslySetInnerHTML={{ __html: result }} />
+                </Box>
               </Box>
             )}
           </Paper>
@@ -69,73 +76,49 @@ const XSSPage = () => {
         <Grid item xs={12} md={6}>
           <Paper elevation={3} sx={{ p: 3 }}>
             <Typography variant="h5" gutterBottom>
-              Test Senaryoları ve Açıklamalar
+              Test Senaryoları
             </Typography>
             <List>
               <ListItem>
                 <ListItemIcon>
-                  <Security color="primary" />
+                  <Code />
                 </ListItemIcon>
-                <ListItemText 
-                  primary="Stored XSS Testi" 
-                  secondary="Kalıcı XSS saldırısı için: <script>alert('XSS')</script> veya <img src='x' onerror='alert(1)'> gibi kodlar deneyin"
+                <ListItemText
+                  primary="Temel XSS Testi"
+                  secondary="<script>alert('XSS')</script>"
                 />
               </ListItem>
               <Divider />
               <ListItem>
                 <ListItemIcon>
-                  <Code color="primary" />
+                  <Code />
                 </ListItemIcon>
-                <ListItemText 
-                  primary="Reflected XSS Testi" 
-                  secondary="Yansıtılan XSS için: ?q=<script>alert('XSS')</script> gibi URL parametreleri deneyin"
+                <ListItemText
+                  primary="IMG Tag Testi"
+                  secondary='<img src="x" onerror="alert(1)">'
                 />
               </ListItem>
               <Divider />
               <ListItem>
                 <ListItemIcon>
-                  <Warning color="primary" />
+                  <Code />
                 </ListItemIcon>
-                <ListItemText 
-                  primary="DOM XSS Testi" 
-                  secondary="DOM tabanlı XSS için: #<script>alert('XSS')</script> gibi fragment identifier'lar deneyin"
+                <ListItemText
+                  primary="SVG Testi"
+                  secondary='<svg onload="alert(1)"></svg>'
                 />
               </ListItem>
               <Divider />
               <ListItem>
                 <ListItemIcon>
-                  <CheckCircle color="primary" />
+                  <Code />
                 </ListItemIcon>
-                <ListItemText 
-                  primary="Güvenli Mod Testi" 
-                  secondary="Switch'i kapatın ve aynı testleri tekrarlayın. Kod enjeksiyonu engellenmelidir"
+                <ListItemText
+                  primary="Event Handler Testi"
+                  secondary='<a href="#" onclick="alert(1)">Click me</a>'
                 />
               </ListItem>
             </List>
-
-            <Box mt={3}>
-              <Typography variant="h6">Güvenlik Önlemleri</Typography>
-              <List>
-                <ListItem>
-                  <ListItemText 
-                    primary="Input Doğrulama" 
-                    secondary="Tüm kullanıcı girdileri doğrulanmalı ve temizlenmelidir"
-                  />
-                </ListItem>
-                <ListItem>
-                  <ListItemText 
-                    primary="Output Encoding" 
-                    secondary="HTML, JavaScript ve URL encoding kullanılmalıdır"
-                  />
-                </ListItem>
-                <ListItem>
-                  <ListItemText 
-                    primary="Content Security Policy" 
-                    secondary="CSP header'ları ile script çalıştırma kısıtlanmalıdır"
-                  />
-                </ListItem>
-              </List>
-            </Box>
           </Paper>
         </Grid>
       </Grid>

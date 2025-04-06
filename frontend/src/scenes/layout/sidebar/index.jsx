@@ -115,7 +115,7 @@ const SideBar = () => {
           />
           <Box sx={{ textAlign: "center" }}>
             <Typography variant="h3" fontWeight="bold" color={colors.gray[100]}>
-              Rümeysa
+              Sezer Bölük
             </Typography>
             <Typography
               variant="h6"

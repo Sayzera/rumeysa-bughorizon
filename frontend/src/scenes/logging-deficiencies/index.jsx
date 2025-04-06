@@ -1,29 +1,62 @@
 import React, { useState } from "react";
-import { Box, TextField, Button, Typography, Paper, Alert, Grid, List, ListItem, ListItemText, ListItemIcon, Divider } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Paper,
+  TextField,
+  Button,
+  Alert,
+  Grid,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  Divider,
+} from "@mui/material";
+import {
+  Security,
+  Code,
+  Warning,
+  CheckCircle,
+} from "@mui/icons-material";
 import { useVulnerability } from "../../context/VulnerabilityContext";
-import { Security, Code, Warning, CheckCircle } from '@mui/icons-material';
 import { useTestCount } from "../../context/TestCountContext";
 
-const CSRFPage = () => {
+const LoggingDeficienciesPage = () => {
   const { vulnerabilities } = useVulnerability();
   const { incrementTestCount } = useTestCount();
-  const [amount, setAmount] = useState("");
-  const [recipient, setRecipient] = useState("");
+  const [logMessage, setLogMessage] = useState("");
   const [result, setResult] = useState(null);
 
-  const handleTransfer = () => {
-    incrementTestCount('csrf');
-    if (vulnerabilities.csrf) {
-      // CSRF açığı aktif ise, doğrudan işlem yap
+  const handleLog = () => {
+    incrementTestCount('loggingDeficiencies');
+    if (vulnerabilities.loggingDeficiencies) {
+      // Logging açığı aktif ise, hassas bilgileri logla
       setResult({
         success: true,
-        message: `$${amount} başarıyla ${recipient} hesabına transfer edildi.`
+        message: "Log kaydedildi",
+        log: {
+          timestamp: new Date().toISOString(),
+          message: logMessage,
+          user: "admin",
+          ip: "192.168.1.1",
+          sessionId: "abc123",
+          sensitiveData: "credit_card=1234-5678-9012-3456"
+        }
       });
     } else {
-      // CSRF açığı kapalı ise, CSRF token kontrolü yap
+      // Logging açığı kapalı ise, hassas bilgileri temizle
       setResult({
-        success: false,
-        message: "CSRF token doğrulanamadı. İşlem reddedildi."
+        success: true,
+        message: "Log kaydedildi (hassas bilgiler temizlendi)",
+        log: {
+          timestamp: new Date().toISOString(),
+          message: logMessage,
+          user: "admin",
+          ip: "192.168.1.1",
+          sessionId: "***",
+          sensitiveData: "***"
+        }
       });
     }
   };
@@ -34,36 +67,36 @@ const CSRFPage = () => {
         <Grid item xs={12} md={6}>
           <Paper elevation={3} sx={{ p: 3 }}>
             <Typography variant="h5" gutterBottom>
-              Para Transferi Testi
+              Log Testi
             </Typography>
             <TextField
               fullWidth
-              type="number"
-              label="Miktar"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              fullWidth
-              label="Alıcı Hesap"
-              value={recipient}
-              onChange={(e) => setRecipient(e.target.value)}
+              multiline
+              rows={4}
+              label="Log Mesajı"
+              value={logMessage}
+              onChange={(e) => setLogMessage(e.target.value)}
               sx={{ mb: 2 }}
             />
             <Button
               variant="contained"
               color="primary"
-              onClick={handleTransfer}
+              onClick={handleLog}
               fullWidth
             >
-              Transfer Et
+              Log Kaydet
             </Button>
             {result !== null && (
               <Box mt={2}>
                 <Alert severity={result.success ? "success" : "error"}>
                   {result.message}
                 </Alert>
+                {result.log && (
+                  <Box mt={2} p={2} border={1} borderColor="grey.300" borderRadius={1}>
+                    <Typography variant="body1">Log Detayları:</Typography>
+                    <pre>{JSON.stringify(result.log, null, 2)}</pre>
+                  </Box>
+                )}
               </Box>
             )}
           </Paper>
@@ -79,8 +112,8 @@ const CSRFPage = () => {
                   <Code />
                 </ListItemIcon>
                 <ListItemText
-                  primary="Form-based CSRF"
-                  secondary="<form action='http://target.com/transfer' method='POST'>...</form>"
+                  primary="Hassas Bilgi Loglama"
+                  secondary="Kredi kartı, şifre gibi hassas bilgilerin loglanması"
                 />
               </ListItem>
               <Divider />
@@ -89,8 +122,8 @@ const CSRFPage = () => {
                   <Code />
                 </ListItemIcon>
                 <ListItemText
-                  primary="JSON-based CSRF"
-                  secondary="fetch('http://target.com/api/transfer', {method: 'POST'...})"
+                  primary="Yetersiz Log Detayı"
+                  secondary="Önemli olayların yetersiz detayla loglanması"
                 />
               </ListItem>
               <Divider />
@@ -99,8 +132,8 @@ const CSRFPage = () => {
                   <Code />
                 </ListItemIcon>
                 <ListItemText
-                  primary="SameSite Cookie Test"
-                  secondary="document.cookie = 'session=123; SameSite=None'"
+                  primary="Log Temizleme"
+                  secondary="Logların düzenli temizlenmemesi"
                 />
               </ListItem>
               <Divider />
@@ -109,8 +142,8 @@ const CSRFPage = () => {
                   <Code />
                 </ListItemIcon>
                 <ListItemText
-                  primary="CSRF Token Test"
-                  secondary="<input type='hidden' name='csrf_token' value='...'>"
+                  primary="Safe Mode Test"
+                  secondary="Hassas bilgilerin loglardan temizlendiğini kontrol edin"
                 />
               </ListItem>
             </List>
@@ -121,4 +154,4 @@ const CSRFPage = () => {
   );
 };
 
-export default CSRFPage; 
+export default LoggingDeficienciesPage; 

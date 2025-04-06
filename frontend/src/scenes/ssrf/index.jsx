@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { Box, TextField, Button, Typography, Paper, Alert, Grid, List, ListItem, ListItemText, ListItemIcon, Divider, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 import { useVulnerability } from "../../context/VulnerabilityContext";
-import { Security, Code, Warning, CheckCircle, Cloud } from '@mui/icons-material';
+import { Security, Code, Warning, CheckCircle } from '@mui/icons-material';
+import { useTestCount } from "../../context/TestCountContext";
 
 const SSRFPage = () => {
+  const { vulnerabilities } = useVulnerability();
+  const { incrementTestCount } = useTestCount();
   const [url, setUrl] = useState("");
-  const [response, setResponse] = useState("");
   const [selectedService, setSelectedService] = useState("");
-  const { vulnerabilities, toggleVulnerability } = useVulnerability();
+  const [result, setResult] = useState(null);
 
   const cloudMetadataServices = {
     aws: "http://169.254.169.254/latest/meta-data/",
@@ -15,26 +17,31 @@ const SSRFPage = () => {
     azure: "http://169.254.169.254/metadata/instance?api-version=2021-02-01"
   };
 
-  const handleRequest = (e) => {
-    e.preventDefault();
-    if (vulnerabilities.ssrf) {
-      // SSRF açık - URL kontrolü yok
-      setResponse(`İstek başarılı: ${url}`);
-    } else {
-      // SSRF kapalı - URL kontrolü var
-      if (url.startsWith("http://localhost") || url.startsWith("http://127.0.0.1")) {
-        setResponse("Hata: İç ağ kaynaklarına erişim engellendi");
-      } else if (Object.values(cloudMetadataServices).includes(url)) {
-        setResponse("Hata: Bulut metadata servislerine erişim engellendi");
-      } else {
-        setResponse("URL kontrolü başarılı - İstek güvenli");
-      }
-    }
-  };
-
-  const handleServiceSelect = (service) => {
+  const handleServiceSelect = (event) => {
+    const service = event.target.value;
     setSelectedService(service);
     setUrl(cloudMetadataServices[service]);
+  };
+
+  const handleRequest = () => {
+    incrementTestCount('ssrf');
+    if (vulnerabilities.ssrf) {
+      // SSRF açığı aktif ise, isteği doğrudan gönder
+      setResult({
+        success: true,
+        message: "İstek başarıyla gönderildi",
+        response: {
+          status: 200,
+          data: "Metadata bilgileri başarıyla alındı"
+        }
+      });
+    } else {
+      // SSRF açığı kapalı ise, isteği engelle
+      setResult({
+        success: false,
+        message: "Error: Access to cloud metadata services is blocked"
+      });
+    }
   };
 
   return (
@@ -42,127 +49,97 @@ const SSRFPage = () => {
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
           <Paper elevation={3} sx={{ p: 3 }}>
-            <Typography variant="h4" gutterBottom>
-              SSRF Test
+            <Typography variant="h5" gutterBottom>
+              SSRF Test Alanı
             </Typography>
-            <Box component="form" onSubmit={handleRequest} sx={{ mt: 2 }}>
-              <FormControl fullWidth sx={{ mb: 2 }}>
-                <InputLabel>Bulut Servisi Seçin</InputLabel>
-                <Select
-                  value={selectedService}
-                  onChange={(e) => handleServiceSelect(e.target.value)}
-                  label="Bulut Servisi Seçin"
-                >
-                  <MenuItem value="aws">AWS Metadata</MenuItem>
-                  <MenuItem value="gcp">GCP Metadata</MenuItem>
-                  <MenuItem value="azure">Azure Metadata</MenuItem>
-                </Select>
-              </FormControl>
-              <TextField
-                fullWidth
-                label="URL"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                margin="normal"
-                placeholder="http://example.com"
-              />
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                fullWidth
-                sx={{ mt: 2 }}
+            <FormControl fullWidth sx={{ mb: 2 }}>
+              <InputLabel>Cloud Service Seçin</InputLabel>
+              <Select
+                value={selectedService}
+                onChange={handleServiceSelect}
+                label="Cloud Service Seçin"
               >
-                İstek Gönder
-              </Button>
-            </Box>
-            {response && (
-              <Alert severity={response.includes("Hata") ? "error" : "success"} sx={{ mt: 2 }}>
-                {response}
-              </Alert>
+                <MenuItem value="aws">AWS Metadata</MenuItem>
+                <MenuItem value="gcp">GCP Metadata</MenuItem>
+                <MenuItem value="azure">Azure Metadata</MenuItem>
+              </Select>
+            </FormControl>
+            <TextField
+              fullWidth
+              label="URL"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              sx={{ mb: 2 }}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleRequest}
+              fullWidth
+            >
+              İstek Gönder
+            </Button>
+            {result !== null && (
+              <Box mt={2}>
+                <Alert severity={result.success ? "success" : "error"}>
+                  {result.message}
+                </Alert>
+                {result.response && (
+                  <Box mt={2} p={2} border={1} borderColor="grey.300" borderRadius={1}>
+                    <Typography variant="body1">Yanıt:</Typography>
+                    <pre>{JSON.stringify(result.response, null, 2)}</pre>
+                  </Box>
+                )}
+              </Box>
             )}
           </Paper>
         </Grid>
         <Grid item xs={12} md={6}>
           <Paper elevation={3} sx={{ p: 3 }}>
             <Typography variant="h5" gutterBottom>
-              Test Senaryoları ve Açıklamalar
+              Test Senaryoları
             </Typography>
             <List>
               <ListItem>
                 <ListItemIcon>
-                  <Cloud color="primary" />
+                  <Code />
                 </ListItemIcon>
-                <ListItemText 
-                  primary="AWS Metadata Testi" 
-                  secondary="http://169.254.169.254/latest/meta-data/ ile AWS metadata servisine erişmeyi deneyin"
+                <ListItemText
+                  primary="AWS Metadata Test"
+                  secondary="http://169.254.169.254/latest/meta-data/"
                 />
               </ListItem>
               <Divider />
               <ListItem>
                 <ListItemIcon>
-                  <Cloud color="primary" />
+                  <Code />
                 </ListItemIcon>
-                <ListItemText 
-                  primary="GCP Metadata Testi" 
-                  secondary="http://metadata.google.internal/computeMetadata/v1/ ile GCP metadata servisine erişmeyi deneyin"
+                <ListItemText
+                  primary="GCP Metadata Test"
+                  secondary="http://metadata.google.internal/computeMetadata/v1/"
                 />
               </ListItem>
               <Divider />
               <ListItem>
                 <ListItemIcon>
-                  <Cloud color="primary" />
+                  <Code />
                 </ListItemIcon>
-                <ListItemText 
-                  primary="Azure Metadata Testi" 
-                  secondary="http://169.254.169.254/metadata/instance?api-version=2021-02-01 ile Azure metadata servisine erişmeyi deneyin"
+                <ListItemText
+                  primary="Azure Metadata Test"
+                  secondary="http://169.254.169.254/metadata/instance?api-version=2021-02-01"
                 />
               </ListItem>
               <Divider />
               <ListItem>
                 <ListItemIcon>
-                  <Warning color="primary" />
+                  <Code />
                 </ListItemIcon>
-                <ListItemText 
-                  primary="Localhost Erişimi" 
-                  secondary="http://localhost veya http://127.0.0.1 ile iç ağ kaynaklarına erişmeyi deneyin"
-                />
-              </ListItem>
-              <Divider />
-              <ListItem>
-                <ListItemIcon>
-                  <CheckCircle color="primary" />
-                </ListItemIcon>
-                <ListItemText 
-                  primary="Güvenli Mod Testi" 
-                  secondary="Switch'i kapatın ve aynı testleri tekrarlayın. SSRF engellenmelidir"
+                <ListItemText
+                  primary="Safe Mode Test"
+                  secondary="Metadata servislerine erişim engellenir"
                 />
               </ListItem>
             </List>
-
-            <Box mt={3}>
-              <Typography variant="h6">Güvenlik Önlemleri</Typography>
-              <List>
-                <ListItem>
-                  <ListItemText 
-                    primary="URL Doğrulama" 
-                    secondary="URL'lerin izin verilen domain'lerden geldiğini kontrol edin"
-                  />
-                </ListItem>
-                <ListItem>
-                  <ListItemText 
-                    primary="IP Kısıtlaması" 
-                    secondary="İç ağ IP'lerine ve metadata servislerine erişimi engelleyin"
-                  />
-                </ListItem>
-                <ListItem>
-                  <ListItemText 
-                    primary="Protocol Kısıtlaması" 
-                    secondary="Sadece HTTP/HTTPS protokollerine izin verin"
-                  />
-                </ListItem>
-              </List>
-            </Box>
           </Paper>
         </Grid>
       </Grid>
