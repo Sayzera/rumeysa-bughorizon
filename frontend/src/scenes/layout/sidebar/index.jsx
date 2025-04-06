@@ -202,11 +202,17 @@ const SideBar = () => {
 
           <Item
             title="SQL Injection (SQLi)"
-            path="/contacts"
+            path="/sql-injection"
             colors={colors}
             icon={<AiOutlineConsoleSql className="size-6" />}
             action={
-              <Switch />
+              <Switch 
+                checked={zafiyetler.sqlInjection}
+                onChange={() => {
+                  toggleZafiyet('sqlInjection')
+                }}
+               
+              />
             }
           />
           <Item

@@ -18,6 +18,7 @@ import {
 import Register from "./scenes/auth/register";
 import Login from "./scenes/auth/login";
 import BrokenAuthScreen from "./scenes/broken-auth";
+import SqlInjectionScreen from "./scenes/sql-injection";
 
 const AppRouter = () => {
   return (
@@ -30,6 +31,7 @@ const AppRouter = () => {
           
 
           <Route path="/broken-auth" element={<BrokenAuthScreen />} />
+          <Route path="/sql-injection" element={<SqlInjectionScreen />} />
 
           <Route path="/team" element={<Team />} />
           <Route path="/contacts" element={<Contacts />} />
