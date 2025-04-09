@@ -1,4 +1,4 @@
-import { CheckCircle, Security, Warning } from "@mui/icons-material";
+import { CheckCircle, Security, Warning, Lock, ErrorOutline } from "@mui/icons-material";
 import {
   Alert,
   Box,
@@ -6,6 +6,7 @@ import {
   Grid,
   List,
   ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
   Paper,
@@ -75,7 +76,7 @@ function BrokenAuthScreen() {
       if (loginAttemps >= basarisizSifreSayisi) {
         setIsLocked(true);
         setMessage(
-          "Çok fazla başarısız giriş denemesi yaptınız. Hesabınız 30 dakika boyunca kilitlendi."
+          `Hesabınız ${basarisizSifreSayisi} kez yanlış şifre denemesi nedeniyle kilitlendi. Lütfen ${yanlisSifreGirmeZamanAraligi / 1000} saniye bekleyin.`
         );
 
         //  30 * 60 * 1000
@@ -83,9 +84,9 @@ function BrokenAuthScreen() {
           setIsLocked(false);
           setLoginAttemps(0);
           setMessage("Hesap kilidi kaldırıldı. Tekrar deneyebilirsiniz.");
-        }, 
-      yanlisSifreGirmeZamanAraligi
-      ); // 30 dakika sonra kilidi aç
+        },
+          yanlisSifreGirmeZamanAraligi
+        ); // 30 dakika sonra kilidi aç
 
         return;
       }
@@ -205,9 +206,9 @@ function BrokenAuthScreen() {
               </Typography>
 
               <Button variant="outlined" sx={{ mt: 2 }}
-               onClick={() => {
-                handleLogout();
-               }}
+                onClick={() => {
+                  handleLogout();
+                }}
               >
                 Çıkış Yap
               </Button>
@@ -249,6 +250,51 @@ function BrokenAuthScreen() {
                   primary="Güvenli Mod Testi"
                   secondary="Switch'i kapatın ve aynı testleri tekrarlayın. Sistem artık güvenlik önlemleriyle çalışmalı."
                 />
+              </ListItem>
+
+              <ListItem>
+                <ListItemIcon>
+                <Lock color="primary" />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Şifre Karmaşıklığı Kontrolü"
+                  secondary="En az 8 karakter uzunluğunda olmalı.
+                            En az bir büyük harf içermeli.
+                            En az bir küçük harf içermeli.
+                            En az bir rakam içermeli.
+                            En az bir özel karakter içermeli (örneğin: !@#$%^&*)."
+                />
+              </ListItem>
+              <ListItem>
+                <ListItemIcon>
+                <ErrorOutline color="primary" />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Başarısız Giriş Denemesi Kontrolü"
+                  secondary="Kullanıcının kaç yanlış şifre denemesi yapabileceğini ve sistemin kaç dakika kilitli kalacağını giriniz."
+
+                />
+              </ListItem>
+              <ListItem>
+                <Box mt={2} ml={5} sx={{ width: '60%' }}>
+                  <TextField
+                    label="Yanlış Giriş Süresi (ms)"
+                    type="number"
+                    value={yanlisSifreGirmeZamanAraligi}
+                    onChange={(e) => setYanlisSifreGirmeZamanAraligi(Number(e.target.value))}
+                    size="small"
+                    fullWidth
+                    sx={{ mb: 2 }}
+                  />
+                  <TextField
+                    label="Maks. Hatalı Giriş"
+                    type="number"
+                    value={basarisizSifreSayisi}
+                    onChange={(e) => setBasarisizSifreSayisi(Number(e.target.value))}
+                    size="small"
+                    fullWidth
+                  />
+                </Box>
               </ListItem>
             </List>
 

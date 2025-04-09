@@ -217,44 +217,83 @@ const SideBar = () => {
           />
           <Item
             title="XSS"
-            path="/invoices"
+            path="/xss"
             colors={colors}
             icon={<CiCircleAlert className="size-6" />}
             action={
-              <Switch />
+              <Switch 
+                checked={zafiyetler.xss}
+                onChange={() => {
+                  toggleZafiyet('xss')
+                }}
+               
+              />
             }
           />
           <Item
             title="Security Misconfiguration"
-            path="/invoices"
+            path="/security-misconfig"
             colors={colors}
             icon={<TbSettingsX className="size-6" />}
             action={
-              <Switch />
+              <Switch 
+                checked={zafiyetler.securityMisconfig}
+                onChange={() => {
+                  toggleZafiyet('securityMisconfig')
+                }}
+               
+              />
             }
           />
 
           <Item
             title="CSRF"
-            path="/invoices"
+            path="/csrf"
             colors={colors}
             icon={<SiHackaday className="size-6" />}
+            action={
+              <Switch 
+                checked={zafiyetler.csrf}
+                onChange={() => {
+                  toggleZafiyet('csrf')
+                }}
+               
+              />
+            }
           />
 
 
           <Item
             title="Logging Deficiencies"
-            path="/invoices"
+            path="/logging-deficiencies"
             colors={colors}
             icon={<LuFileWarning className="size-6" />}
+            action={
+              <Switch 
+                checked={zafiyetler.loggingDeficiencies}
+                onChange={() => {
+                  toggleZafiyet('loggingDeficiencies')
+                }}
+               
+              />
+            }
           />
 
 
           <Item
             title="SSRF"
-            path="/invoices"
+            path="/ssrf"
             colors={colors}
             icon={<MdOutlineSecurity className="size-6" />}
+            action={
+              <Switch 
+                checked={zafiyetler.ssrf}
+                onChange={() => {
+                  toggleZafiyet('ssrf')
+                }}
+               
+              />
+            }
           />
 
 
@@ -263,9 +302,18 @@ const SideBar = () => {
 
           <Item
             title="CSP"
-            path="/invoices"
+            path="/csp"
             colors={colors}
             icon={<LuShieldAlert className="size-6" />}
+            action={
+              <Switch 
+                checked={zafiyetler.csp}
+                onChange={() => {
+                  toggleZafiyet('csp')
+                }}
+               
+              />
+            }
           />
  
 
