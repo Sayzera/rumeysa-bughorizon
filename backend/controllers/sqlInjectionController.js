@@ -1,10 +1,11 @@
-const sqlInjectionService = require('../services/sqlInjectionService');
+import sqlInjectionService from '../services/sqlInjectionService.js';
 
 const sqlInjectionController = {
     // Güvenli olmayan sorgu - SQL Injection'a açık
     unsafeQuery: async (req, res) => {
         try {
             const { query } = req.body;
+
             const result = await sqlInjectionService.unsafeQuery(query);
             res.json(result);
         } catch (error) {
@@ -42,4 +43,4 @@ const sqlInjectionController = {
     }
 };
 
-module.exports = sqlInjectionController; 
+export default sqlInjectionController; 

@@ -5,15 +5,11 @@ import fileUpload from "express-fileupload";
 import authRoutes from './routes/authRouter.js';
 import zipSlipRoutes from './routes/zipSlipRouter.js';
 import owaspRoutes from './routes/owaspRouter.js';
+import sqlInjectionRoutes from './routes/sqlInjectionRoutes.js';
 dotenv.config();
 
-import authRoutes from './routes/authRoutes.js'
-const sqlInjectionRoutes = require('./routes/sqlInjectionRoutes');
-
-dotenv.config()
-
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(express.json());

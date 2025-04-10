@@ -15,7 +15,7 @@
   "devDependencies": {
     "@types/pg": "^8.11.11",
     "eslint": "8.34.0",
-    "nodemon": "2.0.4"
+    "nodemon": "^2.0.4"
   },
   "dependencies": {
     "adm-zip": "^0.5.16",
