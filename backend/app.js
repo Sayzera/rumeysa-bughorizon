@@ -4,6 +4,7 @@ import cors from 'cors'
 import pool from './config/db.js'
 
 import authRoutes from './routes/authRoutes.js'
+import sqlInjectionRoutes from './routes/sqlInjectionRoutes.js'
 
 dotenv.config()
 
@@ -25,6 +26,7 @@ app.use(cors(corsOptions));
 
 
 app.use('/api/auth', authRoutes)
+app.use('/api/sql-injection',sqlInjectionRoutes )
 
 
 app.get('/', (req, res) => {
