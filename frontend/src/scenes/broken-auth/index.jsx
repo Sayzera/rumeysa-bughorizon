@@ -17,10 +17,7 @@ import React, { useState } from "react";
 import { useContextZafiyetler } from "../../context/ZafiyetlerContext";
 
 function BrokenAuthScreen() {
-  /**
-   * TODO:  Şifre karmalıklığı kontrolünü sol tarafta detaylı bir şekilde açıklayın
-   * TODO:  Başarısız giriş denemesini sol tarafa açıklayarak ekleyin
-   */
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 

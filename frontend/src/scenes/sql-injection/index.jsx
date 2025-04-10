@@ -12,58 +12,63 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useContextZafiyetler } from "../../context/ZafiyetlerContext";
 import { CheckCircle, RepeatRounded, Security } from "@mui/icons-material";
 
+/**
+ * TODO: gelen cevaba göre kaç adet veri bulduğunu ekranda göster eğer eleman yoksa, veri bulunamadı uyarısını göster 
+ * 
+ * TODO: yeni bir ekran oluştur. bu ekranda 2 adet input olsun. 1.input zaafiyet adını, 2.input zaafiyet açıklamasını temsil edecek. kullanıcıdan aldığın verileri backend tarafında uygun controller, service ve route yapısını oluştur eğer veri kaydedilirse işlem başarılı uyarısı gelsin edilemezse işlem hatalı uyarısı gelsin  
+ */
+
 function SqlInjectionScreen() {
-
-  const mockData = [
-    {
-        id: 1,
-        name: 'Kullanıcı 1',
-        email: 'user1@example.com'
-    },
-    {
-        id:2,
-        name: 'Kullanıcı 1',
-        email: 'user1@example.com'
-    },
-    {
-        id: 3,
-        name: 'Kullanıcı 1',
-        email: 'user1@example.com'
-    }
-  ]
-
   const [sqlInjectionVal, setSqlInjectionVal] = useState();
   const { zafiyetler } = useContextZafiyetler();
   const [showSqlInjectionVal, setShowSqlInjectionVal] = useState();
-  const [user, setUser] = useState();
-  const isSqlInjection = zafiyetler.sqlInjection
-
+  const [sqlInjectionApiData, setSqlInjectionApiData] = useState();
+  const isSqlInjection = zafiyetler.sqlInjection;
 
   const sanitizeInput = (input) => {
-    const sanitized = input.replace(/<[^>]*>/g, '' )
-    return sanitized?.replace(/['";\\]/g, '')
-  }
+    const sanitized = input.replace(/<[^>]*>/g, "");
+    return sanitized?.replace(/['";\\]/g, "");
+  };
 
   const handleSubmit = () => {
-        if(isSqlInjection) {
-            setUser(mockData)
-            
-            setShowSqlInjectionVal(sqlInjectionVal)
-        } else {
-            setShowSqlInjectionVal(sanitizeInput(sqlInjectionVal))
-            setUser((prev) => 
-             prev?.splice(0,1)
-            )
-        }
-     
-  }
+    if (isSqlInjection) {
+      setShowSqlInjectionVal(sqlInjectionVal);
+      getApiData();
+    } else {
+      setShowSqlInjectionVal(sanitizeInput(sqlInjectionVal));
+      getApiData();
+    }
+  };
 
 
-  console.log(showSqlInjectionVal, 'user')
+  const getApiData = () => {
+    const baseUrl = "http://localhost:8088";
+    const serviceType = isSqlInjection ? 'safe' : 'unsafe';
+
+    // POST
+    fetch(`${baseUrl}/api/sql-injection/${serviceType}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        zaafiyet_adi: sqlInjectionVal.trim(),
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setSqlInjectionApiData(data?.data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
+  console.log(sqlInjectionApiData, "sqlInjectionApiData");
 
   return (
     <Box m="20px">
@@ -98,47 +103,35 @@ function SqlInjectionScreen() {
             </Button>
 
             <Alert severity={!isSqlInjection ? "success" : "error"}>
-              {isSqlInjection
+              {!isSqlInjection
                 ? "SQL Injection Zafiyeti Var"
                 : "SQL Injection Zafiyeti Yok"}
             </Alert>
 
-        { 
-            showSqlInjectionVal && (
-                <Box mt={2}>
+            {showSqlInjectionVal && (
+              <Box mt={2}>
                 <List>
-                    <ListItem>
-                        <ListItemIcon>
-                            <RepeatRounded color="primary" />
-                        </ListItemIcon>
-                        <div
-                            primary="SQL Sorgusu"
-                            dangerouslySetInnerHTML={{__html: showSqlInjectionVal}}
-                        />
-                    </ListItem>
+                  <ListItem>
+                    <ListItemIcon>
+                      <RepeatRounded color="primary" />
+                    </ListItemIcon>
+                    <div
+                      primary="SQL Sorgusu"
+                      dangerouslySetInnerHTML={{ __html: showSqlInjectionVal }}
+                    />
+                  </ListItem>
                 </List>
+              </Box>
+            )}
 
-            </Box>
-            )
-        }
-  
-            
             <List>
-                {
-                    user?.length > 0 && 
-
-                    user?.map((item) => (
-                        <ListItem key={item.id}>
-                            <ListItemText 
-                             primary={item.name}
-                             secondary={item.email}
-                            />
-                        </ListItem>
-                    ))
-                }
+              {sqlInjectionApiData?.length > 0 &&
+                sqlInjectionApiData?.map((item) => (
+                  <ListItem key={item.id}>
+                    <ListItemText primary={item.zaafiyet_adi} secondary={item.zaafiyet_aciklamasi} />
+                  </ListItem>
+                ))}
             </List>
-      
-
           </Paper>
         </Grid>
         <Grid item xs={12} md={6}>
@@ -181,7 +174,6 @@ function SqlInjectionScreen() {
               </ListItem>
               <Divider />
 
-              
               <ListItem>
                 <ListItemIcon>
                   <Security />

@@ -42,17 +42,6 @@ const SideBar = () => {
   } = useContextZafiyetler();
 
   /**
-   * TODO: diğer kısımlardaki linklerin switch proplarını ekle, ve context api ile bağla
-    *  <Switch
-        checked={zafiyetler.brokenAuth}
-        onChange={() => {
-        toggleZafiyet("brokenAuth");
-        }}
-      />
-
-      Test etmek için console.log(zafiyetler)
-
-
       TODO: Her bir link için bir sayfa oluşturalım, klasor adları link ile ilgili olacak ana sayfa ise index.jsx adında olmalıdır. aldığın ekran görüntüsündeki gibi sayfanın içini adına göre düzenleyelim 
    */
  
