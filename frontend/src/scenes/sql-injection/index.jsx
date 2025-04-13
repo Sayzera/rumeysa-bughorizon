@@ -76,21 +76,22 @@ const SqlInjectionPage = () => {
                 rows={4}
               />
             </Box>
-            <Button
+          <Box display="flex" alignItems={"center"} spacing={2} >
+          <Button
               variant="contained"
               color="primary"
               onClick={handleQuery}
-              sx={{ mb: 2 }}
             >
               Sorguyu Çalıştır
             </Button>
             <Button
               variant="outlined"
               color={isVulnerable ? "error" : "success"}
-              onClick={() => toggleVulnerability()}
+              onClick={() => toggleVulnerability('sqlInjection')}
             >
               {isVulnerable ? "Güvenlik Açığını Kapat" : "Güvenlik Açığını Aç"}
             </Button>
+          </Box>
             {result && (
               <Box mt={3}>
                 <Alert severity={result.success ? "success" : "error"}>
