@@ -16,11 +16,6 @@ import React, { useEffect, useState } from "react";
 import { useContextZafiyetler } from "../../context/ZafiyetlerContext";
 import { CheckCircle, RepeatRounded, Security } from "@mui/icons-material";
 
-/**
- * TODO: gelen cevaba göre kaç adet veri bulduğunu ekranda göster eğer eleman yoksa, veri bulunamadı uyarısını göster 
- * 
- * TODO: yeni bir ekran oluştur. bu ekranda 2 adet input olsun. 1.input zaafiyet adını, 2.input zaafiyet açıklamasını temsil edecek. kullanıcıdan aldığın verileri backend tarafında uygun controller, service ve route yapısını oluştur eğer veri kaydedilirse işlem başarılı uyarısı gelsin edilemezse işlem hatalı uyarısı gelsin  
- */
 
 function SqlInjectionScreen() {
   const [sqlInjectionVal, setSqlInjectionVal] = useState();

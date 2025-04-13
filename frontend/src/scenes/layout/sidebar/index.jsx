@@ -41,10 +41,6 @@ const SideBar = () => {
     zafiyetler, toggleZafiyet
   } = useContextZafiyetler();
 
-  /**
-      TODO: Her bir link için bir sayfa oluşturalım, klasor adları link ile ilgili olacak ana sayfa ise index.jsx adında olmalıdır. aldığın ekran görüntüsündeki gibi sayfanın içini adına göre düzenleyelim 
-   */
-
 
   return (
     <Sidebar
