@@ -125,12 +125,22 @@ function SqlInjectionScreen() {
             )}
 
             <List>
-              {sqlInjectionApiData?.length > 0 &&
-                sqlInjectionApiData?.map((item) => (
-                  <ListItem key={item.id}>
-                    <ListItemText primary={item.zaafiyet_adi} secondary={item.zaafiyet_aciklamasi} />
+              {sqlInjectionApiData?.length > 0 ? (
+                <>
+                  <ListItem>
+                    <ListItemText primary={`${sqlInjectionApiData.length} adet veri bulundu.`} />
                   </ListItem>
-                ))}
+                  {sqlInjectionApiData.map((item) => (
+                    <ListItem key={item.id}>
+                      <ListItemText primary={item.zaafiyet_adi} secondary={item.zaafiyet_aciklamasi} />
+                    </ListItem>
+                  ))}
+                </>
+              ) : (
+                <ListItem>
+                  <ListItemText primary="Veri bulunamadı" />
+                </ListItem>
+              )}
             </List>
           </Paper>
         </Grid>

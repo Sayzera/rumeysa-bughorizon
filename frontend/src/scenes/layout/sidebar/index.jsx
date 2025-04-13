@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { Avatar, Box, IconButton, Switch, Typography, useTheme } from "@mui/material";
+import { Avatar, Box, IconButton, Switch, Typography, useTheme ,Divider} from "@mui/material";
 import { useContext, useState } from "react";
 import { tokens } from "../../../theme";
 import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
@@ -22,7 +22,7 @@ import avatar from "../../../assets/images/avatar.png";
 import logo from "../../../assets/images/logo.png";
 import Item from "./Item";
 import { ToggledContext } from "../../../App";
-import { MdLocalPolice } from "react-icons/md";
+import { MdLocalPolice,MdAddCircleOutline } from "react-icons/md";
 import { AiOutlineConsoleSql } from "react-icons/ai";
 import { CiCircleAlert } from "react-icons/ci";
 import { TbSettingsX } from "react-icons/tb";
@@ -44,7 +44,7 @@ const SideBar = () => {
   /**
       TODO: Her bir link için bir sayfa oluşturalım, klasor adları link ile ilgili olacak ana sayfa ise index.jsx adında olmalıdır. aldığın ekran görüntüsündeki gibi sayfanın içini adına göre düzenleyelim 
    */
- 
+
 
   return (
     <Sidebar
@@ -53,7 +53,7 @@ const SideBar = () => {
         border: 0,
         height: "100%",
         width: "300px"
-     
+
       }}
       collapsed={collapsed}
       onBackdropClick={() => setToggled(false)}
@@ -130,7 +130,7 @@ const SideBar = () => {
               fontWeight="500"
               color={colors.greenAccent[500]}
             >
-             Bug Horizon
+              Bug Horizon
             </Typography>
           </Box>
         </Box>
@@ -177,13 +177,13 @@ const SideBar = () => {
             title="Broken Authentication"
             path="/broken-auth"
             colors={colors}
-            icon={<MdLocalPolice  className="size-6" />}
+            icon={<MdLocalPolice className="size-6" />}
             action={
               <Switch
-               checked={zafiyetler.brokenAuth}
-               onChange={() => {
-                toggleZafiyet("brokenAuth");
-               }}
+                checked={zafiyetler.brokenAuth}
+                onChange={() => {
+                  toggleZafiyet("brokenAuth");
+                }}
               />
             }
           />
@@ -195,12 +195,12 @@ const SideBar = () => {
             colors={colors}
             icon={<AiOutlineConsoleSql className="size-6" />}
             action={
-              <Switch 
+              <Switch
                 checked={zafiyetler.sqlInjection}
                 onChange={() => {
                   toggleZafiyet('sqlInjection')
                 }}
-               
+
               />
             }
           />
@@ -210,12 +210,12 @@ const SideBar = () => {
             colors={colors}
             icon={<CiCircleAlert className="size-6" />}
             action={
-              <Switch 
+              <Switch
                 checked={zafiyetler.xss}
                 onChange={() => {
                   toggleZafiyet('xss')
                 }}
-               
+
               />
             }
           />
@@ -225,12 +225,12 @@ const SideBar = () => {
             colors={colors}
             icon={<TbSettingsX className="size-6" />}
             action={
-              <Switch 
+              <Switch
                 checked={zafiyetler.securityMisconfig}
                 onChange={() => {
                   toggleZafiyet('securityMisconfig')
                 }}
-               
+
               />
             }
           />
@@ -241,12 +241,12 @@ const SideBar = () => {
             colors={colors}
             icon={<SiHackaday className="size-6" />}
             action={
-              <Switch 
+              <Switch
                 checked={zafiyetler.csrf}
                 onChange={() => {
                   toggleZafiyet('csrf')
                 }}
-               
+
               />
             }
           />
@@ -258,12 +258,12 @@ const SideBar = () => {
             colors={colors}
             icon={<LuFileWarning className="size-6" />}
             action={
-              <Switch 
+              <Switch
                 checked={zafiyetler.loggingDeficiencies}
                 onChange={() => {
                   toggleZafiyet('loggingDeficiencies')
                 }}
-               
+
               />
             }
           />
@@ -275,12 +275,12 @@ const SideBar = () => {
             colors={colors}
             icon={<MdOutlineSecurity className="size-6" />}
             action={
-              <Switch 
+              <Switch
                 checked={zafiyetler.ssrf}
                 onChange={() => {
                   toggleZafiyet('ssrf')
                 }}
-               
+
               />
             }
           />
@@ -295,21 +295,32 @@ const SideBar = () => {
             colors={colors}
             icon={<LuShieldAlert className="size-6" />}
             action={
-              <Switch 
+              <Switch
                 checked={zafiyetler.csp}
                 onChange={() => {
                   toggleZafiyet('csp')
                 }}
-               
+
               />
             }
           />
- 
 
+          <Divider sx={{ my: 2, backgroundColor: colors.gray[300] }} /> 
 
+          <Typography
+          variant="h6"
+          color={colors.gray[300]}
+          sx={{ m: "15px 0 5px 20px" }}
+        >
+         Tanımlamalar
+        </Typography>
 
-
-
+        <Item
+            title="Zaafiyet Ekleme"
+            path="/create-vulnerability"
+            colors={colors}
+            icon={<MdAddCircleOutline className="size-6" />}
+          />
 
         </Menu>
         {/* <Typography

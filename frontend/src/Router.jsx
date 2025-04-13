@@ -25,6 +25,7 @@ import CsrfScreen from "./scenes/csrf"
 import LoggingDeficienciesScreen from "./scenes/logging-deficiencies"
 import SsrfScreen from "./scenes/ssrf"
 import CspScreen from "./scenes/csp"
+import CreateVulnerabilityScreen from "./scenes/create-vulnerability"
 
 const AppRouter = () => {
   return (
@@ -44,6 +45,7 @@ const AppRouter = () => {
           <Route path="/logging-deficiencies" element={<LoggingDeficienciesScreen />} />
           <Route path="/ssrf" element={<SsrfScreen />} />
           <Route path="/csp" element={<CspScreen />} />
+          <Route path="/create-vulnerability" element={<CreateVulnerabilityScreen />} />
 
           <Route path="/team" element={<Team />} />
           <Route path="/contacts" element={<Contacts />} />
