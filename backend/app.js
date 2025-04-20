@@ -6,7 +6,7 @@ import pool from './config/db.js'
 import authRoutes from './routes/authRoutes.js'
 import sqlInjectionRoutes from './routes/sqlInjectionRoutes.js'
 import sqlTableRoutes from './routes/sqlTableRoutes.js'
-
+import missconfigrationRoutes from './routes/checkMissconfigrationRoutes.js'
 dotenv.config()
 
 const app = express();
@@ -29,6 +29,8 @@ app.use(cors(corsOptions));
 app.use('/api/auth', authRoutes)
 app.use('/api/sql-injection',sqlInjectionRoutes )
 app.use('/api/sql-table', sqlTableRoutes)
+
+app.use('/api/missconfigration', missconfigrationRoutes)
 
 
 app.get('/', (req, res) => {
