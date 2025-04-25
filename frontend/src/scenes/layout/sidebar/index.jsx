@@ -317,6 +317,12 @@ const SideBar = () => {
             colors={colors}
             icon={<MdAddCircleOutline className="size-6" />}
           />
+          <Item
+            title="Zaafiyet Listleme"
+            path="/list-vulnerability"
+            colors={colors}
+            icon={<MdAddCircleOutline className="size-6" />}
+          />
 
         </Menu>
         {/* <Typography
