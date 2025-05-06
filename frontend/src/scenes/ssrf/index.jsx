@@ -1,8 +1,12 @@
+import { Box } from '@mui/material'
 import React from 'react'
 
 function SsrfScreen() {
   return (
-    <div>SsrfScreen</div>
+  
+    <Box m="20px">
+
+    </Box>
   )
 }
 

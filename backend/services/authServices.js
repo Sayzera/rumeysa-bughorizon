@@ -1,4 +1,5 @@
 import pool from "../config/db.js"
+import { logService } from "./logSerivces.js"
 
 
 export const registerUser = async (username, password, email) => {
@@ -17,6 +18,8 @@ export const registerUser = async (username, password, email) => {
             `INSERT INTO ${tableName} (username, password, email) VALUES ($1, $2, $3)`, 
             [username, password, email]
         )
+
+        await logService(`Kullanıcı ${username} kayıt oldu.`, 'register')
 
         return createdUser.rows[0]
         
@@ -50,6 +53,10 @@ export const loginUser = async (username, password) => {
         if(user.rowCount === 0) {
             throw new Error('Kullanıcı adı veya şifre hatalı.')
         }
+
+
+
+        await logService(`Kullanıcı ${username} giriş yaptı.`, 'login')
 
         return user.rows[0]
       
