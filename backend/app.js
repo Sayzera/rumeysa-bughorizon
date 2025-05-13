@@ -8,6 +8,7 @@ import sqlInjectionRoutes from './routes/sqlInjectionRoutes.js'
 import sqlTableRoutes from './routes/sqlTableRoutes.js'
 import csrfRoutes from './routes/csrfRoutes.js'
 import missconfigrationRoutes from './routes/checkMissconfigrationRoutes.js'
+import ssrfRoutes from './routes/ssrfRoute.js'
 import CookieParse from 'cookie-parser'
 dotenv.config()
 
@@ -39,6 +40,7 @@ app.use('/api/sql-injection',sqlInjectionRoutes )
 app.use('/api/sql-table', sqlTableRoutes)
 app.use('/api/csrf', csrfRoutes)
 app.use('/api/missconfigration', missconfigrationRoutes)
+app.use('/api/ssrf', ssrfRoutes)
 
 app.get('/', (req, res) => {
     res.json({
