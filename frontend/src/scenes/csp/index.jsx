@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Box, TextField, Button, Typography, Paper, Alert, Grid, List, ListItem, ListItemText, ListItemIcon, Divider, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Box, TextField, Button, Typography, Paper, Alert, Grid, List, ListItem, ListItemText, ListItemIcon, Divider, Select, MenuItem, FormControl, InputLabel, Switch, FormControlLabel } from "@mui/material";
 import { useVulnerability } from "../../context/VulnerabilityContext";
 import { Security, Code, Warning, CheckCircle } from '@mui/icons-material';
 import { useTestCount } from "../../context/TestCountContext";
@@ -10,6 +10,31 @@ const CSPPage = () => {
   const [script, setScript] = useState("");
   const [selectedExample, setSelectedExample] = useState("");
   const [result, setResult] = useState(null);
+  const [cspEnabled, setCspEnabled] = useState(true);
+
+  useEffect(() => {
+    const metaTag = document.createElement('meta');
+    metaTag.httpEquiv = "Content-Security-Policy";
+    metaTag.content = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self';";
+    
+    // Remove existing CSP meta tag if it exists
+    const existingMeta = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
+    if (existingMeta) {
+      existingMeta.remove();
+    }
+
+    // Add CSP meta tag only if protection is active (vulnerabilities.csp is false)
+    if (!vulnerabilities.csp) {
+      document.head.appendChild(metaTag);
+    }
+
+    return () => {
+      const meta = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
+      if (meta) {
+        meta.remove();
+      }
+    };
+  }, [vulnerabilities.csp]);
 
   const scriptExamples = {
     alert: "<script>alert('XSS Test')</script>",
@@ -58,6 +83,17 @@ const CSPPage = () => {
             <Typography variant="h5" gutterBottom>
               CSP Test Alanı
             </Typography>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={cspEnabled}
+                  onChange={(e) => setCspEnabled(e.target.checked)}
+                  color="primary"
+                />
+              }
+              label="CSP Aktif"
+              sx={{ mb: 2 }}
+            />
             <FormControl fullWidth sx={{ mb: 2 }}>
               <InputLabel>Script Örneği Seçin</InputLabel>
               <Select
