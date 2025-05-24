@@ -14,12 +14,14 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { useContextZafiyetler } from "../../context/ZafiyetlerContext";
+import { useVulnerability } from '../../context/VulnerabilityContext';
 
 function LoggingDeficienciesScreen() {
   const [logMessage, setLogMessage] = useState();
   const { zafiyetler } = useContextZafiyetler();
   const [log, setLog] = useState();
   const [logs, setLogs] = useState([]);
+  const { incrementVulnerabilityCount } = useVulnerability();
 
   const isLoggingDeficiencies = zafiyetler.loggingDeficiencies;
 
@@ -45,6 +47,11 @@ function LoggingDeficienciesScreen() {
 
     const logItem = [serializedLog, ...logs];
     setLogs(logItem, "logItem");
+  };
+
+  const handleTest = () => {
+    incrementVulnerabilityCount('loggingDeficiencies');
+    // ... existing test code ...
   };
 
   console.log(logs);

@@ -20,6 +20,7 @@ import { useState } from "react";
 import { useContextZafiyetler } from "../../context/ZafiyetlerContext";
 import axios from "axios";
 import { Code } from "@mui/icons-material";
+import { useVulnerability } from '../../context/VulnerabilityContext';
 
 const cloudMetaDataServices = {
   jsonplaceholder: "https://jsonplaceholder.typicode.com/posts",
@@ -31,6 +32,7 @@ function SsrfScreen() {
   const [url, setUrl] = useState();
   const { zafiyetler } = useContextZafiyetler();
   const [result, setResult] = useState(null);
+  const { incrementVulnerabilityCount } = useVulnerability();
 
   const isSSRF = zafiyetler.ssrf;
 
@@ -41,6 +43,7 @@ function SsrfScreen() {
   };
 
   const handleRequest = async () => {
+    incrementVulnerabilityCount('ssrf');
     try {
       const { data } = await axios.post(
         import.meta.env.VITE_BASE_URL + "/api/ssrf/ssrfCheck",

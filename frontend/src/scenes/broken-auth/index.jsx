@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { useContextZafiyetler } from "../../context/ZafiyetlerContext";
+import { useVulnerability } from '../../context/VulnerabilityContext';
 
 function BrokenAuthScreen() {
 
@@ -49,10 +50,14 @@ function BrokenAuthScreen() {
     },
   ];
 
+  const { incrementVulnerabilityCount } = useVulnerability();
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
     console.log(zafiyetler, "zafiyetler");
+
+    incrementVulnerabilityCount('brokenAuth');
 
     // zafiyet açıksa kontrol eder
     if (zafiyetler.brokenAuth) {

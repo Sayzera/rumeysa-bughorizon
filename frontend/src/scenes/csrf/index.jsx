@@ -17,6 +17,7 @@ import React, { useEffect, useState } from "react";
 import { useContextZafiyetler } from "../../context/ZafiyetlerContext";
 import { endpoints } from "../../constant/endpoints";
 import axios from "axios";
+import { useVulnerability } from '../../context/VulnerabilityContext';
 
 function CsrfScreen() {
   const [amount, setEmount] = useState();
@@ -26,7 +27,10 @@ function CsrfScreen() {
   const [message, setMessage] = useState();
   const isModeOnCSRF = zafiyetler.csrf;
 
+  const { incrementVulnerabilityCount } = useVulnerability();
+
   const testCSRF = async () => {
+    incrementVulnerabilityCount('csrf');
     try {
       const { data } = await axios.post(
         import.meta.env.VITE_BASE_URL + (isModeOnCSRF ?  endpoints.testCSRFSecure : endpoints.testCSRFNotSecure),

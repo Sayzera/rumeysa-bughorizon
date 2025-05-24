@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import { useContextZafiyetler } from "../../context/ZafiyetlerContext";
+import { useVulnerability } from '../../context/VulnerabilityContext';
 import {
   Accordion,
   AccordionDetails,
@@ -30,6 +31,7 @@ function XssScreen() {
   const [result, setResult] = useState(null);
   const { zafiyetler } = useContextZafiyetler();
   const [activeTab, setActiveTab] = useState(0);
+  const { incrementVulnerabilityCount } = useVulnerability();
 
   console.log(zafiyetler, "zafiyetler");
 
@@ -109,6 +111,11 @@ function XssScreen() {
       ],
     },
   ];
+
+  const handleVulnerabilityTrigger = () => {
+    incrementVulnerabilityCount('xss');
+    // ... existing vulnerability code ...
+  };
 
   return (
     <Box m="20px">

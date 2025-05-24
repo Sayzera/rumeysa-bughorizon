@@ -21,6 +21,7 @@ import {
 } from "@mui/material";
 import { useContextZafiyetler } from "../../context/ZafiyetlerContext";
 import { Code } from "@mui/icons-material";
+import { useVulnerability } from '../../context/VulnerabilityContext';
 
 const scriptExamples = {
   alert: "<script>alert('XSS Test')</script>",
@@ -36,6 +37,7 @@ function CspScreen() {
   const { zafiyetler } = useContextZafiyetler();
   const [result, setResult] = useState();
   const isCspActive = zafiyetler.csp;
+  const { incrementVulnerabilityCount } = useVulnerability();
 
   const handleExampleSelect = (event) => {
     const example = event.target.value;
@@ -75,6 +77,7 @@ function CspScreen() {
   }, [isCspActive]);
 
   const handleExecute = () => {
+    incrementVulnerabilityCount('csp');
     if (!isCspActive) {
       try {
         eval(script.replace(/<script>|<\/script>/g, ""));

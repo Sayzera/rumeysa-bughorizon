@@ -15,6 +15,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { useContextZafiyetler } from "../../context/ZafiyetlerContext";
 import { CheckCircle, RepeatRounded, Security } from "@mui/icons-material";
+import { useVulnerability } from '../../context/VulnerabilityContext';
 
 
 function SqlInjectionScreen() {
@@ -23,6 +24,7 @@ function SqlInjectionScreen() {
   const [showSqlInjectionVal, setShowSqlInjectionVal] = useState();
   const [sqlInjectionApiData, setSqlInjectionApiData] = useState();
   const isSqlInjection = zafiyetler.sqlInjection;
+  const { incrementVulnerabilityCount } = useVulnerability();
 
   const sanitizeInput = (input) => {
     const sanitized = input.replace(/<[^>]*>/g, "");
@@ -30,6 +32,7 @@ function SqlInjectionScreen() {
   };
 
   const handleSubmit = () => {
+    incrementVulnerabilityCount('sqlInjection');
     if (isSqlInjection) {
       setShowSqlInjectionVal(sqlInjectionVal);
       getApiData();

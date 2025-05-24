@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useContextZafiyetler } from "../../context/ZafiyetlerContext";
+import { useVulnerability } from '../../context/VulnerabilityContext';
 import {
   Alert,
   Box,
@@ -23,8 +24,10 @@ function SecurityMisconfigScreen() {
   const { zafiyetler } = useContextZafiyetler();
   const [checkMissconfigrationResponse, setCheckMissconfigrationResponse] =
     useState();
+  const { incrementVulnerabilityCount } = useVulnerability();
 
   const createNewMissconfigration = async () => {
+    incrementVulnerabilityCount('securityMisconfig');
     const { data } = await axios.post(
       import.meta.env.VITE_BASE_URL + endpoints.missconfigrationCheck,
       {
